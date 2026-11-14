@@ -84,3 +84,10 @@ a:focus-visible .photo-frame img {
   .photo-frame img, .btn-press { transition: none; }
   .photo-frame:hover img { transform: none; }
 }
+
+/* Keep the footer clear of the fixed price bar on listing pages (below lg). */
+@media (max-width: 1023px) {
+  body:has(#mobile-book-bar) footer {
+    padding-bottom: 5rem;
+  }
+}

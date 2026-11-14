@@ -78,7 +78,7 @@ export default async function ListingPage({ params }: Props) {
   ];
 
   return (
-    <article className="mx-auto max-w-7xl px-4 pb-24 pt-8 sm:px-8">
+    <article className="mx-auto max-w-7xl px-4 pb-32 pt-8 sm:px-8 lg:pb-24">
       <Link href="/listings" className="text-[15px] font-semibold text-moss hover:text-ink hover:underline">
         Back to all homes
       </Link>
@@ -100,19 +100,38 @@ export default async function ListingPage({ params }: Props) {
         )}
       </header>
 
-      <div className="mt-8 grid gap-2 overflow-hidden rounded-2xl sm:grid-cols-4 sm:grid-rows-2 sm:gap-3 md:h-[520px]">
-        <div className="photo-frame relative aspect-[4/3] overflow-hidden sm:col-span-3 sm:row-span-2 sm:aspect-auto">
+      {/* Phones: swipe through every photo. */}
+      <ul
+        aria-label="Photos"
+        className="-mx-4 mt-6 flex snap-x snap-mandatory gap-2 overflow-x-auto px-4 sm:hidden"
+      >
+        {listing.images.map((src, i) => (
+          <li key={src} className="relative aspect-[4/3] w-[88%] shrink-0 snap-center overflow-hidden rounded-xl">
+            <Image
+              src={photo(src, 900)}
+              alt={`${listing.title}, photo ${i + 1} of ${listing.images.length}`}
+              fill
+              priority={i === 0}
+              sizes="88vw"
+              className="object-cover"
+            />
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-8 hidden gap-3 overflow-hidden rounded-2xl sm:grid sm:h-[420px] sm:grid-cols-4 sm:grid-rows-2 md:h-[520px]">
+        <div className="photo-frame relative col-span-3 row-span-2 overflow-hidden">
           <Image
             src={photo(lead, 1800)}
             alt={`${listing.title}, main photo`}
             fill
             priority
-            sizes="(min-width: 640px) 75vw, 100vw"
+            sizes="75vw"
             className="object-cover"
           />
         </div>
         {rest.slice(0, 2).map((src, i) => (
-          <div key={src} className="photo-frame relative hidden overflow-hidden sm:block">
+          <div key={src} className="photo-frame relative overflow-hidden">
             <Image
               src={photo(src, 800)}
               alt={`${listing.title}, photo ${i + 2}`}
@@ -176,9 +195,25 @@ export default async function ListingPage({ params }: Props) {
           </section>
         </div>
 
-        <aside className="lg:sticky lg:top-8 lg:self-start">
+        <aside id="book" className="scroll-mt-6 lg:sticky lg:top-8 lg:self-start">
           <PriceCard price={listing.price_per_night} maxGuests={listing.guests} />
         </aside>
+      </div>
+
+      {/* Phones and tablets: keep the price in reach while reading. */}
+      <div id="mobile-book-bar" className="fixed inset-x-0 bottom-0 z-30 border-t border-fog bg-paper px-4 py-3 shadow-[0_-8px_20px_-12px_rgba(20,27,23,0.3)] lg:hidden">
+        <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 sm:px-4">
+          <p className="tnum">
+            <span className="text-lg font-extrabold">${listing.price_per_night}</span>{" "}
+            <span className="text-moss">a night</span>
+          </p>
+          <a
+            href="#book"
+            className="btn-press rounded-full bg-marigold px-6 py-3 font-semibold text-ink hover:bg-marigold-deep"
+          >
+            Choose dates
+          </a>
+        </div>
       </div>
     </article>
   );

@@ -39,7 +39,7 @@ export function PriceCard({ price, maxGuests }: { price: number; maxGuests: numb
           setRequested(true);
         }}
       >
-        <div className="grid grid-cols-2 gap-3">
+        <div className="grid gap-3 min-[420px]:grid-cols-2 lg:grid-cols-1 xl:grid-cols-2">
           <label className="text-sm font-semibold">
             Check in
             <input
